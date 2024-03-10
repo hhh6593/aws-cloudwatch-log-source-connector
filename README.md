@@ -1,12 +1,11 @@
 # aws-cloudwatch-log-source-connector
-=================
 
 
-AWS Cloudwatch Log Source Connector
+
+### AWS Cloudwatch Log Source Connector
 
 
 -----
-
 ### Configuration
 
 
@@ -46,11 +45,11 @@ Build
        }
     }
 
-Log Stream  
+**Log Stream**  
 aws.cloudwatch.log.stream을 지정하지 않을 경우, aws.cloudwatch.log.group 내 가장 최신의 로그 스트림으로부터 레코드를 전송한다.
 
-Credential  
+**Credential**  
 AWS SDK의 자격 증명 공급자 체인을 사용하여 해당 정보를 탐색한다. 
 
-Task  
+**Task**  
 1개의 태스크만을 사용하므로 tasks.max를 설정하더라도 항상 하나의 태스크만 생성된다.
