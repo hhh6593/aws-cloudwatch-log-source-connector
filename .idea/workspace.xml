@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f58cb33c-beba-45ab-8e56-d85df82c7855" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/hans/AWSCloudwatchLogSourceConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/hans/AWSCloudwatchLogSourceConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/hans/AWSCloudwatchLogSourceConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/hans/AWSCloudwatchLogSourceConnector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/hans/AWSCloudwatchLogSourceTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/hans/AWSCloudwatchLogSourceTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,11 +126,28 @@
       <workItem from="1717418248899" duration="394000" />
       <workItem from="1717418687746" duration="318000" />
       <workItem from="1717419161679" duration="128000" />
-      <workItem from="1717419298940" duration="4107000" />
+      <workItem from="1717419298940" duration="4855000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="false" />
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
