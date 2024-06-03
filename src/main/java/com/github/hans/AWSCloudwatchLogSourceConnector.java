@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.utils.AppInfoParser;
 import org.apache.kafka.connect.connector.Task;
+import org.apache.kafka.connect.source.ExactlyOnceSupport;
 import org.apache.kafka.connect.source.SourceConnector;
 
 import java.util.ArrayList;
@@ -46,5 +47,11 @@ public class AWSCloudwatchLogSourceConnector extends SourceConnector {
     @Override
     public String version() {
         return AppInfoParser.getVersion();
+    }
+
+    @Override
+    public ExactlyOnceSupport exactlyOnceSupport(Map<String, String> props) {
+        // 로그 스트림을 설정하지 않더라도 Lastest 스트림을 지정하기 때문에 항상 exactly-once SUPPORTED 반환
+        return ExactlyOnceSupport.SUPPORTED;
     }
 }
