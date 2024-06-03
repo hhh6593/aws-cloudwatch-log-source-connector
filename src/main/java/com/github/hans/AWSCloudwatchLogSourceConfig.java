@@ -14,9 +14,8 @@ public class AWSCloudwatchLogSourceConfig extends AbstractConfig {
     private static final String AWS_CLOUDWATCH_LOG_GROUP_DOC = "Cloudwatch Log group Name";
     public static final String AWS_CLOUDWATCH_LOG_STREAM = "aws.cloudwatch.log.stream";
     private static final String AWS_CLOUDWATCH_LOG_STREAM_DOC = "Cloudwatch Log stream Name in aws.cloudwatch.log.group";
-    public static final String KAFKA_TOPIC = "topic.name";
-    private static final String KAFKA_TOPIC_DOC = "The name of the topic where you want to store the record";
-
+    public static final String START_FROM_LATEST = "start.from.latest";
+    private static final String START_FROM_LATEST_DOC = "Start from latest log stream";
 
 
     public AWSCloudwatchLogSourceConfig(Map<?, ?> originals) {
@@ -29,7 +28,7 @@ public class AWSCloudwatchLogSourceConfig extends AbstractConfig {
                 .define(AWS_REGION, ConfigDef.Type.STRING, ConfigDef.Importance.MEDIUM, AWS_REGION_DOC)
                 .define(AWS_CLOUDWATCH_LOG_GROUP, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, AWS_CLOUDWATCH_LOG_GROUP_DOC)
                 .define(AWS_CLOUDWATCH_LOG_STREAM, ConfigDef.Type.STRING, "",ConfigDef.Importance.LOW, AWS_CLOUDWATCH_LOG_STREAM_DOC)
-                .define(KAFKA_TOPIC, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, KAFKA_TOPIC_DOC);
+                .define(START_FROM_LATEST, ConfigDef.Type.BOOLEAN, true, ConfigDef.Importance.LOW, START_FROM_LATEST_DOC);
     }
 
 }
