@@ -13,7 +13,6 @@
 |:----------------------------|:----------|:---------|:-------------|:-----------------------------------|
 | `aws.region`                | string    | yes      | -            | AWS Region                         |
 | `aws.cloudwatch.log.group`  | string    | yes      | -            | 로그 그룹명                             |
-| `aws.cloudwatch.log.stream` | string    | no       | -            | aws.cloudwatch.log.group 내 로그 스트림명 |
 | `start.from.latest`         | boolean   | no       | -            | 가장 최신 로그 스트림 시작 여부                 |
 
 
@@ -40,8 +39,7 @@ Build
             "tasks.max": "1", 
             "aws.region": "ap-northeast-2",
             "aws.cloudwatch.log.group": "/ecs/test-api",
-            "start.from.latest": "true",
-            "poll.interval.ms": 50000
+            "start.from.latest": "true"
        }
     }
 
