@@ -60,41 +60,75 @@ public class AWSCloudwatchLogSourceTask extends SourceTask {
     @Override
     public List<SourceRecord> poll() {
         List<SourceRecord> records = new ArrayList<>();
-        FilterLogEventsRequest logEventsRequest = FilterLogEventsRequest.builder()
-                .logGroupName(logGroup)
-                .build();
+        Map<String, Object> offset = context.offsetStorageReader().offset(Collections.singletonMap("logGroup", logGroup));
 
-        // 오프셋 정보가 있는지 확인
-        Map<String,Object> offset = context.offsetStorageReader().offset(Collections.singletonMap("logGroup", logGroup));
+        Long lastProcessedTimestamp;
+        String lastProcessedEventId;
+
         if (offset != null) {
-            Object lastRecordedOffset = offset.get("timestamp");
-            if (lastRecordedOffset!= null && !(lastRecordedOffset instanceof Long)) {
-                throw new ConfigException("Offset must be of type Long");
-            }
-            if (lastRecordedOffset != null) {
-                log.debug("Resuming from offset: {}", lastRecordedOffset);
-                logEventsRequest = logEventsRequest.toBuilder().startTime((Long) lastRecordedOffset).build();
-            }
+            lastProcessedTimestamp = (Long) offset.get("timestamp");
+            lastProcessedEventId = (String) offset.get("eventId");
         } else {
-            log.info("No offset found, starting from the current time {}", logGroup);
-            logEventsRequest = logEventsRequest.toBuilder().startTime(System.currentTimeMillis() - 1000 * 60 * 60 * 24).build();
+            log.info("No offset found, starting from 24 hours ago for logGroup {}", logGroup);
+            lastProcessedTimestamp = System.currentTimeMillis() - 1000 * 60 * 60 * 24;
+            lastProcessedEventId = null;
         }
 
-        FilterLogEventsResponse logEventsResponse = cloudWatchLogsClient.filterLogEvents(logEventsRequest);
-        Map<String, String> sourcePartition = Collections.singletonMap("logGroup", logGroup);
+        Long startTime = lastProcessedTimestamp;
+        String nextToken = null;
 
-        for (FilteredLogEvent event : logEventsResponse.events()) {
-            String eventMessage = event.message();
-            Map<String, Long> sourceOffset = Map.of("timestamp", event.timestamp());
-            SourceRecord record = new SourceRecord(
-                    sourcePartition,
-                    sourceOffset,
-                    topicName,
-                    Schema.STRING_SCHEMA,
-                    eventMessage
-            );
-            records.add(record);
-        }
+        Long maxTimestamp = lastProcessedTimestamp;
+        String maxEventId = lastProcessedEventId;
+
+        do {
+            FilterLogEventsRequest.Builder requestBuilder = FilterLogEventsRequest.builder()
+                    .logGroupName(logGroup)
+                    .startTime(startTime);
+
+            if (nextToken != null) {
+                requestBuilder.nextToken(nextToken);
+            }
+
+            FilterLogEventsResponse logEventsResponse = cloudWatchLogsClient.filterLogEvents(requestBuilder.build());
+
+            for (FilteredLogEvent event : logEventsResponse.events()) {
+                Long eventTimestamp = event.timestamp();
+                String eventId = event.eventId();
+
+                // 이미 처리된 이벤트를 스킵하여 중복 방지
+                if (eventTimestamp < lastProcessedTimestamp) {
+                    continue;
+                } else if (eventTimestamp.equals(lastProcessedTimestamp)) {
+                    if (lastProcessedEventId != null && eventId.compareTo(lastProcessedEventId) <= 0) {
+                        continue;
+                    }
+                }
+
+                String eventMessage = event.message();
+                Map<String, Object> sourceOffset = Map.of(
+                        "timestamp", eventTimestamp,
+                        "eventId", eventId
+                );
+
+                SourceRecord record = new SourceRecord(
+                        Collections.singletonMap("logGroup", logGroup),
+                        sourceOffset,
+                        topicName,
+                        Schema.STRING_SCHEMA,
+                        eventMessage
+                );
+                records.add(record);
+
+                // 가장 큰 타임스탬프와 이벤트 ID를 업데이트
+                if (eventTimestamp > maxTimestamp || (eventTimestamp.equals(maxTimestamp) && eventId.compareTo(maxEventId) > 0)) {
+                    maxTimestamp = eventTimestamp;
+                    maxEventId = eventId;
+                }
+            }
+
+            nextToken = logEventsResponse.nextToken();
+        } while (nextToken != null && !nextToken.isEmpty());
+
         return records;
     }
 
